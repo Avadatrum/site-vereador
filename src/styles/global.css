@@ -1,0 +1,153 @@
+/* Importações dos componentes */
+@import './components/Header.css';
+@import './components/HeroBanner.css';
+@import './components/AboutSection.css';
+@import './components/ProposalsSection.css';
+@import './components/Header.css';
+
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Rubik', sans-serif;
+    line-height: 1.6;
+    color: #333;
+    font-weight: 400;
+}
+
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Rubik', sans-serif;
+    line-height: 1.6;
+    color: #333;
+    font-weight: 400;
+    /* Peso regular por padrão */
+}
+
+.App {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* Classe para diferentes pesos da fonte */
+.font-light {
+    font-weight: 300;
+}
+
+.font-regular {
+    font-weight: 400;
+}
+
+.font-medium {
+    font-weight: 500;
+}
+
+.font-semibold {
+    font-weight: 600;
+}
+
+.font-bold {
+    font-weight: 700;
+}
+
+/* Classe para títulos */
+.heading {
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.heading-1 {
+    font-size: 2.5rem;
+}
+
+.heading-2 {
+    font-size: 2rem;
+}
+
+.heading-3 {
+    font-size: 1.75rem;
+}
+
+.heading-4 {
+    font-size: 1.5rem;
+}
+
+.heading-5 {
+    font-size: 1.25rem;
+}
+
+.heading-6 {
+    font-size: 1rem;
+}
+
+/* Responsividade para títulos */
+@media (max-width: 768px) {
+    .heading-1 {
+        font-size: 2rem;
+    }
+
+    .heading-2 {
+        font-size: 1.75rem;
+    }
+
+    .heading-3 {
+        font-size: 1.5rem;
+    }
+
+    .heading-4 {
+        font-size: 1.25rem;
+    }
+
+    .heading-5 {
+        font-size: 1.1rem;
+    }
+
+    .heading-6 {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .heading-1 {
+        font-size: 1.75rem;
+    }
+
+    .heading-2 {
+        font-size: 1.5rem;
+    }
+
+    .heading-3 {
+        font-size: 1.25rem;
+    }
+
+    .heading-4 {
+        font-size: 1.1rem;
+    }
+
+    .heading-5 {
+        font-size: 1rem;
+    }
+
+    .heading-6 {
+        font-size: 0.9rem;
+    }
+}
