@@ -1,7 +1,9 @@
-import axios, { AxiosInstance, AxiosError } from 'axios';
+// src/services/api.ts
+import axios from 'axios';
+import type { AxiosInstance, AxiosError } from 'axios'; // Importação somente de tipo
 
 const api: AxiosInstance = axios.create({
-    baseURL: 'http://localhost:5000/api',
+    baseURL: 'http://localhost:3001/api',
     timeout: 10000,
 });
 
@@ -14,7 +16,7 @@ api.interceptors.request.use(
         }
         return config;
     },
-    (error) => {
+    (error: AxiosError) => {
         return Promise.reject(error);
     }
 );

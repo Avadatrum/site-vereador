@@ -13,6 +13,9 @@ import Footer from './components/layout/Footer';
 import profileImage from './assets/img-italo.png';
 import './styles/global.css';
 
+// NOVA PÁGINA - Detalhes da Notícia
+import NoticiaDetail from './pages/NoticiaDetail';
+
 // Componentes do admin (do Lovable)
 import { AdminLayout } from './components/AdminLayout';
 import Dashboard from './pages/admin/Dashboard';
@@ -26,11 +29,11 @@ import ProtectedRoute from './components/ProtectedRoute';
 
 const App: React.FC = () => {
   const navigationItems = [
-    { label: 'Início', href: '#' },
-    { label: 'Sobre', href: '#about' },
-    { label: 'Propostas', href: '#proposals' },
-    { label: 'Notícias', href: '#news' },
-    { label: 'Contato', href: '#contact' },
+    { label: 'Início', href: '/' },
+    { label: 'Sobre', href: '/#about' },
+    { label: 'Propostas', href: '/#proposals' },
+    { label: 'Notícias', href: '/#news' },
+    { label: 'Contato', href: '/#contact' },
   ];
 
   return (
@@ -59,6 +62,9 @@ const App: React.FC = () => {
                 <Footer />
               </>
             } />
+
+            {/* NOVA ROTA - Página de detalhes da notícia */}
+            <Route path="/noticia/:id" element={<NoticiaDetail />} />
 
             {/* Rota de Login */}
             <Route path="/admin/login" element={<Login />} />
