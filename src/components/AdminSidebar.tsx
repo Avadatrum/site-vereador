@@ -6,7 +6,7 @@ import {
     Settings,
     User
 } from "lucide-react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import {
     Sidebar,
     SidebarContent,
@@ -30,17 +30,9 @@ const menuItems = [
 
 export function AdminSidebar() {
     const { state } = useSidebar();
-    const location = useLocation();
     const isCollapsed = state === "collapsed";
 
-    const isActive = (path: string, exact?: boolean) => {
-        if (exact) {
-            return location.pathname === path;
-        }
-        return location.pathname.startsWith(path);
-    };
-
-    const getNavClass = ({ isActive }: { isActive: boolean }) =>
+    const getNavClass = ({ isActive }: { isActive: boolean }): string =>
         isActive
             ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
             : "text-sidebar-foreground hover:bg-sidebar-accent/50";
@@ -52,7 +44,7 @@ export function AdminSidebar() {
                     {!isCollapsed && (
                         <div>
                             <h1 className="text-xl font-bold text-sidebar-foreground">
-                                Admin Panel
+                                Painel Admin
                             </h1>
                             <p className="text-sm text-sidebar-foreground/60 mt-1">
                                 Vereador Ítalo Caetano

@@ -1,59 +1,107 @@
-import React, { FC } from 'react';
+import { useState, useEffect } from 'react';
+import type { FC } from 'react';
 import '../../styles/components/NewsSection.css';
 
 interface NewsItem {
     id: number;
-    title: string;
-    description: string;
-    date: string;
-    tags: string[];
-    imageUrl?: string;
+    titulo: string;
+    conteudo: string;
+    categoria: string;
+    status: 'Rascunho' | 'Publicado';
+    data: string;
+    visualizacoes: number;
+    imagem_url?: string;
+    autor: string;
+    createdAt: string;
 }
 
 interface NewsSectionProps {
     title?: string;
     subtitle?: string;
-    news?: NewsItem[];
 }
 
 const NewsSection: FC<NewsSectionProps> = ({
     title = "Notícias e Atualizações",
-    subtitle = "Acompanhe as últimas notícias sobre o trabalho de Ítalo Caetano",
-    news = [
-        {
-            id: 1,
-            title: "Ítalo Caetano apresenta projeto de revitalização do centro histórico",
-            description: "O vereador apresentou na última sessão da Câmara um projeto que visa recuperar e revitalizar o centro histórico de Tibau do Sul, preservando o patrimônio cultural e estimulando o turismo local.",
-            date: "15/05/2023",
-            tags: ["Urbanismo", "Cultura", "Turismo"],
-            imageUrl: "https://via.placeholder.com/400x250?text=Notícia+1"
-        },
-        {
-            id: 2,
-            title: "Nova escola será construída no bairro Novo Horizonte",
-            description: "Após anos de reivindicação da comunidade, foi aprovado o recurso para construção de uma nova unidade escolar que atenderá mais de 500 alunos da região.",
-            date: "10/05/2023",
-            tags: ["Educação", "Infraestrutura"],
-            imageUrl: "https://via.placeholder.com/400x250?text=Notícia+2"
-        },
-        {
-            id: 3,
-            title: "Programa de saúde preventiva atinge mais de 2 mil pessoas",
-            description: "A ação conjunta entre a Câmara Municipal e a Secretaria de Saúde já realizou exames e orientações para mais de 2 mil cidadãos em todo o município.",
-            date: "05/05/2023",
-            tags: ["Saúde", "Comunidade"],
-            imageUrl: "https://via.placeholder.com/400x250?text=Notícia+3"
-        },
-        {
-            id: 4,
-            title: "Ítalo Caetano participa de audiência pública sobre meio ambiente",
-            description: "O vereador esteve presente na audiência que discutiu medidas para preservar os manguezais da região e promover o desenvolvimento sustentável.",
-            date: "01/05/2023",
-            tags: ["Meio Ambiente", "Sustentabilidade"],
-            imageUrl: "https://via.placeholder.com/400x250?text=Notícia+4"
-        }
-    ]
+    subtitle = "Acompanhe as últimas notícias sobre o trabalho de Ítalo Caetano"
 }) => {
+    const [news, setNews] = useState<NewsItem[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
+
+    // Buscar notícias publicadas da API
+    const fetchNews = async () => {
+        try {
+            setLoading(true);
+            setError('');
+
+            const response = await fetch('http://localhost:3001/api/noticias-publicas');
+
+            if (!response.ok) {
+                throw new Error('Erro ao carregar notícias');
+            }
+
+            const data = await response.json();
+
+            if (data.success) {
+                // Filtrar apenas notícias publicadas e limitar a 6
+                const noticiasPublicadas = data.data
+                    .filter((item: NewsItem) => item.status === 'Publicado')
+                    .slice(0, 6);
+
+                setNews(noticiasPublicadas);
+            }
+        } catch (error) {
+            console.error('Erro ao carregar notícias:', error);
+            setError('Não foi possível carregar as notícias');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // Carregar notícias ao montar componente
+    useEffect(() => {
+        fetchNews();
+    }, []);
+
+    // Formatar data
+    const formatDate = (dateString: string) => {
+        return new Date(dateString).toLocaleDateString('pt-BR');
+    };
+
+    // Limitar texto
+    const limitText = (text: string, maxLength: number) => {
+        if (text.length <= maxLength) return text;
+        return text.substring(0, maxLength) + '...';
+    };
+
+    if (loading) {
+        return (
+            <section className="news-section" id="news">
+                <div className="container">
+                    <div className="news-header">
+                        <h2 className="news-title">{title}</h2>
+                        <p className="news-subtitle">{subtitle}</p>
+                    </div>
+                    <div className="loading-message">Carregando notícias...</div>
+                </div>
+            </section>
+        );
+    }
+
+    if (error) {
+        return (
+            <section className="news-section" id="news">
+                <div className="container">
+                    <div className="news-header">
+                        <h2 className="news-title">{title}</h2>
+                        <p className="news-subtitle">{subtitle}</p>
+                    </div>
+                    <div className="error-message">{error}</div>
+                </div>
+            </section>
+        );
+    }
+
     return (
         <section className="news-section" id="news">
             <div className="container">
@@ -62,41 +110,51 @@ const NewsSection: FC<NewsSectionProps> = ({
                     <p className="news-subtitle">{subtitle}</p>
                 </div>
 
-                <div className="news-grid">
-                    {news.map((item) => (
-                        <div key={item.id} className="news-card">
-                            <div className="news-image-container">
-                                <img
-                                    src={item.imageUrl}
-                                    alt={item.title}
-                                    className="news-image"
-                                />
-                                <div className="news-date">{item.date}</div>
-                            </div>
+                {news.length === 0 ? (
+                    <div className="no-news-message">
+                        <p>Nenhuma notícia publicada ainda.</p>
+                        <p>Em breve teremos novidades!</p>
+                    </div>
+                ) : (
+                    <>
+                        <div className="news-grid">
+                            {news.map((item) => (
+                                <div key={item.id} className="news-card">
+                                    <div className="news-image-container">
+                                        <img
+                                            src={item.imagem_url || "https://via.placeholder.com/400x250?text=Notícia+Vereador"}
+                                            alt={item.titulo}
+                                            className="news-image"
+                                        />
+                                        <div className="news-date">{formatDate(item.createdAt)}</div>
+                                    </div>
 
-                            <div className="news-content">
-                                <h3 className="news-title-card">{item.title}</h3>
-                                <p className="news-description">{item.description}</p>
+                                    <div className="news-content">
+                                        <h3 className="news-title-card">{item.titulo}</h3>
+                                        <p className="news-description">
+                                            {limitText(item.conteudo, 150)}
+                                        </p>
 
-                                <div className="news-tags">
-                                    {item.tags.map((tag, index) => (
-                                        <span key={index} className="news-tag">{tag}</span>
-                                    ))}
+                                        <div className="news-tags">
+                                            <span className="news-tag">{item.categoria}</span>
+                                            <span className="news-tag">{item.visualizacoes} visualizações</span>
+                                        </div>
+
+                                        <button className="news-button">
+                                            Ler notícia
+                                        </button>
+                                    </div>
                                 </div>
-
-                                <button className="news-button">
-                                    Ler notícia
-                                </button>
-                            </div>
+                            ))}
                         </div>
-                    ))}
-                </div>
 
-                <div className="news-footer">
-                    <button className="news-load-more">
-                        Carregar mais notícias
-                    </button>
-                </div>
+                        <div className="news-footer">
+                            <button className="news-load-more" onClick={fetchNews}>
+                                Atualizar notícias
+                            </button>
+                        </div>
+                    </>
+                )}
             </div>
         </section>
     );
